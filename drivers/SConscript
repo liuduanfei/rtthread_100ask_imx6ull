@@ -1,7 +1,15 @@
 from building import *
 
 cwd = GetCurrentDir()
-src	= Glob('*.c') + Glob('iomux/*.c')
+src = Split("""
+board.c
+led.c
+iomux/iomux_config.c
+iomux/uart_iomux_config.c
+""")
+
+if GetDepend('RT_USING_UART1'):
+    src = src + ['serial.c']
 
 CPPPATH = [cwd, cwd + '/iomux']
 

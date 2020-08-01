@@ -19,7 +19,6 @@
 #include <imx_uart.h>
 #include <epit.h>
 #include <cortex_a.h>
-#include "led.h"
 
 #include <mmu.h>
 
@@ -80,7 +79,6 @@ void rt_hw_board_init(void)
 
     rt_components_board_init();
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
-    led_init();
 }
 
 /*@}*/

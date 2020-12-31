@@ -93,6 +93,13 @@ void rt_hw_board_init(void)
 	extern void enable_neon_fpu(void);
 
     enable_neon_fpu();
+
+	rt_hw_interrupt_init();
+
+#ifdef RT_USING_HEAP
+    rt_system_heap_init(HEAP_BEGIN, HEAP_END);
+#endif
+
     rt_components_board_init();
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
 }

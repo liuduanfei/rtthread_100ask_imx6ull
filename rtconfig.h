@@ -4,7 +4,7 @@
 /* Automatically generated file; DO NOT EDIT. */
 /* RT-Thread Configuration */
 
-#define BOARD_IMX6UL
+#define BOARD_IMX6ULL
 
 /* RT-Thread Kernel */
 
@@ -48,6 +48,9 @@
 /* RT-Thread Components */
 
 #define RT_USING_COMPONENTS_INIT
+#define RT_USING_USER_MAIN
+#define RT_MAIN_THREAD_STACK_SIZE 2048
+#define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
 
@@ -65,6 +68,7 @@
 #define FINSH_CMD_SIZE 80
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
+#define FINSH_USING_MSH_ONLY
 #define FINSH_ARG_MAX 10
 
 /* Device virtual file system */

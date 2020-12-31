@@ -24,7 +24,7 @@ d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-ea
 Allocating common symbols
 Common symbol       size              file
 
-_uart1              0x54              build\drivers\serial.o
+_uart1              0x54              build\drivers\drv_uart.o
 shell               0x4               build\kernel\components\finsh\shell.o
 rt_thread_priority_table
                     0x100             build\kernel\src\scheduler.o
@@ -66,7 +66,7 @@ Discarded input sections
  .data          0x00000000        0x0 build\applications\main.o
  .bss           0x00000000        0x0 build\applications\main.o
  .bss           0x00000000        0x0 build\drivers\board.o
- .data          0x00000000        0x0 build\drivers\serial.o
+ .data          0x00000000        0x0 build\drivers\drv_uart.o
  .data          0x00000000        0x0 build\drivers\cortex_a_gcc.o
  .bss           0x00000000        0x0 build\drivers\cortex_a_gcc.o
  .data          0x00000000        0x0 build\kernel\src\clock.o
@@ -475,7 +475,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
 LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb/softfp/crt0.o
 LOAD build\applications\main.o
 LOAD build\drivers\board.o
-LOAD build\drivers\serial.o
+LOAD build\drivers\drv_uart.o
 LOAD build\drivers\cortex_a_gcc.o
 LOAD build\kernel\src\clock.o
 LOAD build\kernel\src\components.o
@@ -544,7 +544,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
  .text          0x8000105c      0x1fc build\drivers\board.o
                 0x800010a4                rt_hw_timer_init
                 0x80001220                rt_hw_board_init
- .text          0x80001258      0x368 build\drivers\serial.o
+ .text          0x80001258      0x368 build\drivers\drv_uart.o
                 0x8000146c                uart_iomux
                 0x800014fc                rt_hw_uart_init
  .text          0x800015c0      0x164 build\drivers\cortex_a_gcc.o
@@ -980,7 +980,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
                 0x80016e1c                __rt_init_rti_board_start
  .rti_fn.1      0x80016e20        0x4 build\drivers\board.o
                 0x80016e20                __rt_init_rt_hw_timer_init
- .rti_fn.1      0x80016e24        0x4 build\drivers\serial.o
+ .rti_fn.1      0x80016e24        0x4 build\drivers\drv_uart.o
                 0x80016e24                __rt_init_rt_hw_uart_init
  .rti_fn.1.end  0x80016e28        0x4 build\kernel\src\components.o
                 0x80016e28                __rt_init_rti_board_end
@@ -1020,7 +1020,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
  .rodata        0x80016e3c       0x12 build\drivers\board.o
                 0x80016e3c                platform_mem_desc_size
  *fill*         0x80016e4e        0x2 
- .rodata        0x80016e50       0x22 build\drivers\serial.o
+ .rodata        0x80016e50       0x22 build\drivers\drv_uart.o
  *fill*         0x80016e72        0x2 
  .rodata        0x80016e74       0x2c build\kernel\src\components.o
  .rodata        0x80016ea0      0x1e2 build\kernel\src\device.o
@@ -1182,7 +1182,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
 
 .bss            0x80024000     0x8760
  *(.bss)
- .bss           0x80024000        0xc build\drivers\serial.o
+ .bss           0x80024000        0xc build\drivers\drv_uart.o
  .bss           0x8002400c        0x4 build\kernel\src\clock.o
  .bss           0x80024010      0x190 build\kernel\src\idle.o
  .bss           0x800241a0        0x9 build\kernel\src\irq.o
@@ -1212,7 +1212,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
  .bss           0x8002c0e0        0x4 build\kernel\components\libc\compilers\minilibc\string.o
  *(.bss.*)
  *(COMMON)
- COMMON         0x8002c0e4       0x54 build\drivers\serial.o
+ COMMON         0x8002c0e4       0x54 build\drivers\drv_uart.o
                 0x8002c0e4                _uart1
  COMMON         0x8002c138        0x4 build\kernel\src\kservice.o
                 0x8002c138                rt_assert_hook
@@ -1257,7 +1257,7 @@ LOAD d:/env_released_1.1.3/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-no
  .comment       0x00000000       0x6e build\applications\main.o
                                  0x6f (size before relaxing)
  .comment       0x0000006e       0x6f build\drivers\board.o
- .comment       0x0000006e       0x6f build\drivers\serial.o
+ .comment       0x0000006e       0x6f build\drivers\drv_uart.o
  .comment       0x0000006e       0x6f build\kernel\src\clock.o
  .comment       0x0000006e       0x6f build\kernel\src\components.o
  .comment       0x0000006e       0x6f build\kernel\src\device.o
@@ -1296,7 +1296,7 @@ OUTPUT(rtthread.elf elf32-littlearm)
  .ARM.attributes
                 0x00000048       0x2d build\drivers\board.o
  .ARM.attributes
-                0x00000075       0x2d build\drivers\serial.o
+                0x00000075       0x2d build\drivers\drv_uart.o
  .ARM.attributes
                 0x000000a2       0x1f build\drivers\cortex_a_gcc.o
  .ARM.attributes
@@ -1367,7 +1367,7 @@ OUTPUT(rtthread.elf elf32-littlearm)
 .debug_info     0x00000000     0xfb13
  .debug_info    0x00000000       0x47 build\applications\main.o
  .debug_info    0x00000047      0x224 build\drivers\board.o
- .debug_info    0x0000026b      0x90c build\drivers\serial.o
+ .debug_info    0x0000026b      0x90c build\drivers\drv_uart.o
  .debug_info    0x00000b77       0x6c build\drivers\cortex_a_gcc.o
  .debug_info    0x00000be3      0x435 build\kernel\src\clock.o
  .debug_info    0x00001018      0x54c build\kernel\src\components.o
@@ -1403,7 +1403,7 @@ OUTPUT(rtthread.elf elf32-littlearm)
 .debug_abbrev   0x00000000     0x3054
  .debug_abbrev  0x00000000       0x39 build\applications\main.o
  .debug_abbrev  0x00000039      0x131 build\drivers\board.o
- .debug_abbrev  0x0000016a      0x1ea build\drivers\serial.o
+ .debug_abbrev  0x0000016a      0x1ea build\drivers\drv_uart.o
  .debug_abbrev  0x00000354       0x14 build\drivers\cortex_a_gcc.o
  .debug_abbrev  0x00000368      0x138 build\kernel\src\clock.o
  .debug_abbrev  0x000004a0      0x164 build\kernel\src\components.o
@@ -1439,7 +1439,7 @@ OUTPUT(rtthread.elf elf32-littlearm)
 .debug_loc      0x00000000     0x55ac
  .debug_loc     0x00000000       0x44 build\applications\main.o
  .debug_loc     0x00000044       0x90 build\drivers\board.o
- .debug_loc     0x000000d4      0x1b8 build\drivers\serial.o
+ .debug_loc     0x000000d4      0x1b8 build\drivers\drv_uart.o
  .debug_loc     0x0000028c      0x13c build\kernel\src\clock.o
  .debug_loc     0x000003c8      0x248 build\kernel\src\components.o
  .debug_loc     0x00000610      0x31c build\kernel\src\device.o
@@ -1473,7 +1473,7 @@ OUTPUT(rtthread.elf elf32-littlearm)
  .debug_aranges
                 0x00000020       0x20 build\drivers\board.o
  .debug_aranges
-                0x00000040       0x20 build\drivers\serial.o
+                0x00000040       0x20 build\drivers\drv_uart.o
  .debug_aranges
                 0x00000060       0x20 build\drivers\cortex_a_gcc.o
  .debug_aranges
@@ -1537,106 +1537,106 @@ OUTPUT(rtthread.elf elf32-littlearm)
  .debug_aranges
                 0x00000430       0x20 build\kernel\components\libc\compilers\minilibc\string.o
 
-.debug_line     0x00000000     0x3c79
+.debug_line     0x00000000     0x3c71
  .debug_line    0x00000000       0x45 build\applications\main.o
  .debug_line    0x00000045       0xb7 build\drivers\board.o
- .debug_line    0x000000fc       0xe1 build\drivers\serial.o
- .debug_line    0x000001dd       0xb4 build\drivers\cortex_a_gcc.o
- .debug_line    0x00000291       0x83 build\kernel\src\clock.o
- .debug_line    0x00000314       0xc7 build\kernel\src\components.o
- .debug_line    0x000003db      0x1d6 build\kernel\src\device.o
- .debug_line    0x000005b1      0x136 build\kernel\src\idle.o
- .debug_line    0x000006e7      0x8bb build\kernel\src\ipc.o
- .debug_line    0x00000fa2       0x8d build\kernel\src\irq.o
- .debug_line    0x0000102f      0x414 build\kernel\src\kservice.o
- .debug_line    0x00001443      0x276 build\kernel\src\mem.o
- .debug_line    0x000016b9      0x212 build\kernel\src\object.o
- .debug_line    0x000018cb      0x16e build\kernel\src\scheduler.o
- .debug_line    0x00001a39      0x2a8 build\kernel\src\thread.o
- .debug_line    0x00001ce1      0x224 build\kernel\src\timer.o
- .debug_line    0x00001f05       0x7b build\kernel\libcpu\arm\cortex-a\cpu.o
- .debug_line    0x00001f80      0x265 build\kernel\libcpu\arm\cortex-a\gic.o
- .debug_line    0x000021e5       0xc1 build\kernel\libcpu\arm\cortex-a\interrupt.o
- .debug_line    0x000022a6      0x134 build\kernel\libcpu\arm\cortex-a\mmu.o
- .debug_line    0x000023da       0x8b build\kernel\libcpu\arm\cortex-a\stack.o
- .debug_line    0x00002465       0xc6 build\kernel\libcpu\arm\cortex-a\trap.o
- .debug_line    0x0000252b       0x94 build\kernel\libcpu\arm\cortex-a\context_gcc.o
- .debug_line    0x000025bf       0xac build\kernel\libcpu\arm\cortex-a\cp15_gcc.o
- .debug_line    0x0000266b       0xed build\kernel\libcpu\arm\cortex-a\start_gcc.o
- .debug_line    0x00002758       0x61 build\kernel\libcpu\arm\cortex-a\vector_gcc.o
- .debug_line    0x000027b9      0x181 build\kernel\components\drivers\misc\pin.o
- .debug_line    0x0000293a      0x45e build\kernel\components\drivers\serial\serial.o
- .debug_line    0x00002d98      0x134 build\kernel\components\drivers\src\completion.o
- .debug_line    0x00002ecc      0x21b build\kernel\components\drivers\src\dataqueue.o
- .debug_line    0x000030e7      0x2e2 build\kernel\components\finsh\shell.o
- .debug_line    0x000033c9      0x324 build\kernel\components\finsh\cmd.o
- .debug_line    0x000036ed      0x1ca build\kernel\components\finsh\msh.o
- .debug_line    0x000038b7      0x3c2 build\kernel\components\libc\compilers\minilibc\string.o
+ .debug_line    0x000000fc       0xd9 build\drivers\drv_uart.o
+ .debug_line    0x000001d5       0xb4 build\drivers\cortex_a_gcc.o
+ .debug_line    0x00000289       0x83 build\kernel\src\clock.o
+ .debug_line    0x0000030c       0xc7 build\kernel\src\components.o
+ .debug_line    0x000003d3      0x1d6 build\kernel\src\device.o
+ .debug_line    0x000005a9      0x136 build\kernel\src\idle.o
+ .debug_line    0x000006df      0x8bb build\kernel\src\ipc.o
+ .debug_line    0x00000f9a       0x8d build\kernel\src\irq.o
+ .debug_line    0x00001027      0x414 build\kernel\src\kservice.o
+ .debug_line    0x0000143b      0x276 build\kernel\src\mem.o
+ .debug_line    0x000016b1      0x212 build\kernel\src\object.o
+ .debug_line    0x000018c3      0x16e build\kernel\src\scheduler.o
+ .debug_line    0x00001a31      0x2a8 build\kernel\src\thread.o
+ .debug_line    0x00001cd9      0x224 build\kernel\src\timer.o
+ .debug_line    0x00001efd       0x7b build\kernel\libcpu\arm\cortex-a\cpu.o
+ .debug_line    0x00001f78      0x265 build\kernel\libcpu\arm\cortex-a\gic.o
+ .debug_line    0x000021dd       0xc1 build\kernel\libcpu\arm\cortex-a\interrupt.o
+ .debug_line    0x0000229e      0x134 build\kernel\libcpu\arm\cortex-a\mmu.o
+ .debug_line    0x000023d2       0x8b build\kernel\libcpu\arm\cortex-a\stack.o
+ .debug_line    0x0000245d       0xc6 build\kernel\libcpu\arm\cortex-a\trap.o
+ .debug_line    0x00002523       0x94 build\kernel\libcpu\arm\cortex-a\context_gcc.o
+ .debug_line    0x000025b7       0xac build\kernel\libcpu\arm\cortex-a\cp15_gcc.o
+ .debug_line    0x00002663       0xed build\kernel\libcpu\arm\cortex-a\start_gcc.o
+ .debug_line    0x00002750       0x61 build\kernel\libcpu\arm\cortex-a\vector_gcc.o
+ .debug_line    0x000027b1      0x181 build\kernel\components\drivers\misc\pin.o
+ .debug_line    0x00002932      0x45e build\kernel\components\drivers\serial\serial.o
+ .debug_line    0x00002d90      0x134 build\kernel\components\drivers\src\completion.o
+ .debug_line    0x00002ec4      0x21b build\kernel\components\drivers\src\dataqueue.o
+ .debug_line    0x000030df      0x2e2 build\kernel\components\finsh\shell.o
+ .debug_line    0x000033c1      0x324 build\kernel\components\finsh\cmd.o
+ .debug_line    0x000036e5      0x1ca build\kernel\components\finsh\msh.o
+ .debug_line    0x000038af      0x3c2 build\kernel\components\libc\compilers\minilibc\string.o
 
-.debug_str      0x00000000     0x37a0
+.debug_str      0x00000000     0x37a2
  .debug_str     0x00000000       0xfb build\applications\main.o
                                 0x100 (size before relaxing)
  .debug_str     0x000000fb      0x147 build\drivers\board.o
                                 0x281 (size before relaxing)
- .debug_str     0x00000242      0x4b2 build\drivers\serial.o
-                                0x6d0 (size before relaxing)
- .debug_str     0x000006f4      0x12e build\kernel\src\clock.o
+ .debug_str     0x00000242      0x4b4 build\drivers\drv_uart.o
+                                0x6d2 (size before relaxing)
+ .debug_str     0x000006f6      0x12e build\kernel\src\clock.o
                                 0x371 (size before relaxing)
- .debug_str     0x00000822      0x103 build\kernel\src\components.o
+ .debug_str     0x00000824      0x103 build\kernel\src\components.o
                                 0x422 (size before relaxing)
- .debug_str     0x00000925      0x2cc build\kernel\src\device.o
+ .debug_str     0x00000927      0x2cc build\kernel\src\device.o
                                 0x791 (size before relaxing)
- .debug_str     0x00000bf1      0x10c build\kernel\src\idle.o
+ .debug_str     0x00000bf3      0x10c build\kernel\src\idle.o
                                 0x426 (size before relaxing)
- .debug_str     0x00000cfd      0x483 build\kernel\src\ipc.o
+ .debug_str     0x00000cff      0x483 build\kernel\src\ipc.o
                                 0x932 (size before relaxing)
- .debug_str     0x00001180       0xc8 build\kernel\src\irq.o
+ .debug_str     0x00001182       0xc8 build\kernel\src\irq.o
                                 0x261 (size before relaxing)
- .debug_str     0x00001248      0x326 build\kernel\src\kservice.o
+ .debug_str     0x0000124a      0x326 build\kernel\src\kservice.o
                                 0x904 (size before relaxing)
- .debug_str     0x0000156e      0x1a8 build\kernel\src\mem.o
+ .debug_str     0x00001570      0x1a8 build\kernel\src\mem.o
                                 0x41d (size before relaxing)
- .debug_str     0x00001716      0x2ba build\kernel\src\object.o
+ .debug_str     0x00001718      0x2ba build\kernel\src\object.o
                                 0x6dd (size before relaxing)
- .debug_str     0x000019d0      0x1ed build\kernel\src\scheduler.o
+ .debug_str     0x000019d2      0x1ed build\kernel\src\scheduler.o
                                 0x5b9 (size before relaxing)
- .debug_str     0x00001bbd      0x1db build\kernel\src\thread.o
+ .debug_str     0x00001bbf      0x1db build\kernel\src\thread.o
                                 0x728 (size before relaxing)
- .debug_str     0x00001d98      0x1a6 build\kernel\src\timer.o
+ .debug_str     0x00001d9a      0x1a6 build\kernel\src\timer.o
                                 0x5e7 (size before relaxing)
- .debug_str     0x00001f3e       0x37 build\kernel\libcpu\arm\cortex-a\cpu.o
+ .debug_str     0x00001f40       0x37 build\kernel\libcpu\arm\cortex-a\cpu.o
                                 0x1cf (size before relaxing)
- .debug_str     0x00001f75      0x16e build\kernel\libcpu\arm\cortex-a\gic.o
+ .debug_str     0x00001f77      0x16e build\kernel\libcpu\arm\cortex-a\gic.o
                                 0x366 (size before relaxing)
- .debug_str     0x000020e3      0x1c9 build\kernel\libcpu\arm\cortex-a\interrupt.o
+ .debug_str     0x000020e5      0x1c9 build\kernel\libcpu\arm\cortex-a\interrupt.o
                                 0x383 (size before relaxing)
- .debug_str     0x000022ac      0x103 build\kernel\libcpu\arm\cortex-a\mmu.o
+ .debug_str     0x000022ae      0x103 build\kernel\libcpu\arm\cortex-a\mmu.o
                                 0x2bd (size before relaxing)
- .debug_str     0x000023af       0x44 build\kernel\libcpu\arm\cortex-a\stack.o
+ .debug_str     0x000023b1       0x44 build\kernel\libcpu\arm\cortex-a\stack.o
                                 0x1e9 (size before relaxing)
- .debug_str     0x000023f3       0xca build\kernel\libcpu\arm\cortex-a\trap.o
+ .debug_str     0x000023f5       0xca build\kernel\libcpu\arm\cortex-a\trap.o
                                 0x278 (size before relaxing)
- .debug_str     0x000024bd      0x1a0 build\kernel\components\drivers\misc\pin.o
+ .debug_str     0x000024bf      0x1a0 build\kernel\components\drivers\misc\pin.o
                                 0x6f1 (size before relaxing)
- .debug_str     0x0000265d      0x2c3 build\kernel\components\drivers\serial\serial.o
+ .debug_str     0x0000265f      0x2c3 build\kernel\components\drivers\serial\serial.o
                                 0x8bd (size before relaxing)
- .debug_str     0x00002920       0x67 build\kernel\components\drivers\src\completion.o
+ .debug_str     0x00002922       0x67 build\kernel\components\drivers\src\completion.o
                                 0x3e9 (size before relaxing)
- .debug_str     0x00002987       0xa1 build\kernel\components\drivers\src\dataqueue.o
+ .debug_str     0x00002989       0xa1 build\kernel\components\drivers\src\dataqueue.o
                                 0x4b1 (size before relaxing)
- .debug_str     0x00002a28      0x2c3 build\kernel\components\finsh\shell.o
+ .debug_str     0x00002a2a      0x2c3 build\kernel\components\finsh\shell.o
                                 0x92b (size before relaxing)
- .debug_str     0x00002ceb      0x7d6 build\kernel\components\finsh\cmd.o
+ .debug_str     0x00002ced      0x7d6 build\kernel\components\finsh\cmd.o
                                0x10df (size before relaxing)
- .debug_str     0x000034c1      0x1b8 build\kernel\components\finsh\msh.o
+ .debug_str     0x000034c3      0x1b8 build\kernel\components\finsh\msh.o
                                 0x3f6 (size before relaxing)
- .debug_str     0x00003679      0x127 build\kernel\components\libc\compilers\minilibc\string.o
+ .debug_str     0x0000367b      0x127 build\kernel\components\libc\compilers\minilibc\string.o
                                 0x357 (size before relaxing)
 
 .debug_frame    0x00000000     0x31f8
  .debug_frame   0x00000000       0x30 build\applications\main.o
  .debug_frame   0x00000030       0x68 build\drivers\board.o
- .debug_frame   0x00000098       0xf0 build\drivers\serial.o
+ .debug_frame   0x00000098       0xf0 build\drivers\drv_uart.o
  .debug_frame   0x00000188       0xb0 build\kernel\src\clock.o
  .debug_frame   0x00000238      0x148 build\kernel\src\components.o
  .debug_frame   0x00000380      0x1d8 build\kernel\src\device.o
@@ -1823,7 +1823,7 @@ __rt_ffs                                          build\kernel\src\kservice.o
                                                   build\kernel\src\scheduler.o
 __rt_init_finsh_system_init                       build\kernel\components\finsh\shell.o
 __rt_init_rt_hw_timer_init                        build\drivers\board.o
-__rt_init_rt_hw_uart_init                         build\drivers\serial.o
+__rt_init_rt_hw_uart_init                         build\drivers\drv_uart.o
 __rt_init_rti_board_end                           build\kernel\src\components.o
 __rt_init_rti_board_start                         build\kernel\src\components.o
 __rt_init_rti_end                                 build\kernel\src\components.o
@@ -1859,7 +1859,7 @@ _syscall_table_end                                build\kernel\components\finsh\
                                                   build\kernel\components\finsh\cmd.o
 _sysvar_table_begin                               build\kernel\components\finsh\shell.o
 _sysvar_table_end                                 build\kernel\components\finsh\shell.o
-_uart1                                            build\drivers\serial.o
+_uart1                                            build\drivers\drv_uart.o
 arm_branch_prediction_disable                     build\drivers\cortex_a_gcc.o
 arm_branch_prediction_enable                      build\drivers\cortex_a_gcc.o
 arm_branch_target_cache_invalidate                build\drivers\cortex_a_gcc.o
@@ -2206,20 +2206,20 @@ rt_hw_interrupt_get_irq                           build\kernel\libcpu\arm\cortex
 rt_hw_interrupt_init                              build\kernel\libcpu\arm\cortex-a\interrupt.o
                                                   build\drivers\board.o
 rt_hw_interrupt_install                           build\kernel\libcpu\arm\cortex-a\interrupt.o
-                                                  build\drivers\serial.o
+                                                  build\drivers\drv_uart.o
                                                   build\drivers\board.o
 rt_hw_interrupt_mask                              build\kernel\libcpu\arm\cortex-a\interrupt.o
 rt_hw_interrupt_umask                             build\kernel\libcpu\arm\cortex-a\interrupt.o
-                                                  build\drivers\serial.o
+                                                  build\drivers\drv_uart.o
                                                   build\drivers\board.o
 rt_hw_mmu_init                                    build\kernel\libcpu\arm\cortex-a\mmu.o
                                                   build\kernel\libcpu\arm\cortex-a\start_gcc.o
 rt_hw_mmu_setmtt                                  build\kernel\libcpu\arm\cortex-a\mmu.o
 rt_hw_pmu_dump_feature                            build\kernel\libcpu\arm\cortex-a\pmu.o
 rt_hw_serial_isr                                  build\kernel\components\drivers\serial\serial.o
-                                                  build\drivers\serial.o
+                                                  build\drivers\drv_uart.o
 rt_hw_serial_register                             build\kernel\components\drivers\serial\serial.o
-                                                  build\drivers\serial.o
+                                                  build\drivers\drv_uart.o
 rt_hw_set_domain_register                         build\kernel\libcpu\arm\cortex-a\mmu.o
 rt_hw_show_memory                                 build\kernel\libcpu\arm\common\showmem.o
 rt_hw_show_register                               build\kernel\libcpu\arm\cortex-a\trap.o
@@ -2240,7 +2240,7 @@ rt_hw_trap_swi                                    build\kernel\libcpu\arm\cortex
                                                   build\kernel\libcpu\arm\cortex-a\start_gcc.o
 rt_hw_trap_undef                                  build\kernel\libcpu\arm\cortex-a\trap.o
                                                   build\kernel\libcpu\arm\cortex-a\start_gcc.o
-rt_hw_uart_init                                   build\drivers\serial.o
+rt_hw_uart_init                                   build\drivers\drv_uart.o
 rt_hw_vector_init                                 build\kernel\libcpu\arm\cortex-a\interrupt.o
 rt_interrupt_enter                                build\kernel\src\irq.o
                                                   build\kernel\libcpu\arm\cortex-a\start_gcc.o
@@ -2710,7 +2710,7 @@ system_vectors                                    build\kernel\libcpu\arm\cortex
 time                                              build\kernel\components\libc\compilers\minilibc\time.o
 tolower                                           build\kernel\components\libc\compilers\minilibc\string.o
 toupper                                           build\kernel\components\libc\compilers\minilibc\string.o
-uart_iomux                                        build\drivers\serial.o
+uart_iomux                                        build\drivers\drv_uart.o
 vector_dabt                                       build\kernel\libcpu\arm\cortex-a\start_gcc.o
                                                   build\kernel\libcpu\arm\cortex-a\vector_gcc.o
 vector_fiq                                        build\kernel\libcpu\arm\cortex-a\start_gcc.o

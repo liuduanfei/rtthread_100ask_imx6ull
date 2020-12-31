@@ -10,9 +10,9 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-
-#include "board.h"
 #include <mmu.h>
+#include <board.h>
+
 
 struct mem_desc platform_mem_desc[] = {
     {0x00000000, 0x80000000, 0x00000000, DEVICE_MEM},

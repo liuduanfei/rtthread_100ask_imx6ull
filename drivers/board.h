@@ -12,10 +12,6 @@
 #define __BOARD_H__
 
 #include <rthw.h>
-#include <registers.h>
-
-#define CONFIG_MX6
-#define CONFIG_MX6UL
 
 #if defined(__CC_ARM)
 extern int Image$$RW_IRAM1$$ZI$$Limit;

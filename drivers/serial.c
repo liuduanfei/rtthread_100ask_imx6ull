@@ -8,18 +8,9 @@
  */
 
 #include <rthw.h>
-#include <registers/regsuart.h>
-#include <imx_uart.h>
-
 #include <rtdevice.h>
-
 #include "serial.h"
-
-struct hw_uart_device
-{
-    uint32_t instance;
-    int irqno;
-};
+#include "uart.h"
 
 static void rt_hw_uart_isr(int irqno, void *param)
 {
@@ -30,87 +21,75 @@ static void rt_hw_uart_isr(int irqno, void *param)
 
 static rt_err_t uart_configure(struct rt_serial_device *serial, struct serial_configure *cfg)
 {
-    struct hw_uart_device *uart;
-    uint32_t baudrate;
-    uint8_t parity, stopbits, datasize, flowcontrol;
+    UART1->UCR1 |= (1 << 0);		/*关闭当前串口*/ 
+	
+	/* 
+	 *  设置UART传输格式：
+	 *  UART1中的UCR2寄存器关键bit如下
+	 *  [14]:	1：忽略RTS引脚
+	 *  [8] :	0: 关闭奇偶校验 默认为0，无需设置
+	 *  [6] :	0: 停止位1位	    默认为0，无需设置
+	 *  [5] :	1: 数据长度8位
+	 *  [2] :	1: 发送数据使能
+	 *  [1] :	1: 接收数据使能
+	 */
+	
+	UART1->UCR2 |= (1<<14) |(1<<5) |(1<<2)|(1<<1);
 
-    RT_ASSERT(serial != RT_NULL);
-    uart = (struct hw_uart_device *)serial->parent.user_data;
+	/*
+	 *  UART1中的UCR3寄存器关键bit如下
+	 *  [2]:  1:根据官方文档表示，IM6ULL的UART用了这个MUXED模型，提示要设置	
+	 */
+	
+	UART1->UCR3 |= (1<<2);
+	
+	/*
+	 * 设置波特率
+	 * 根据芯片手册得知波特率计算公式:
+	 * Baud Rate = Ref Freq / (16 * (UBMR + 1)/(UBIR+1))
+	 * 当我们需要设置 115200的波特率
+	 * UART1_UFCR [9:7]=101，表示不分频，得到当前UART参考频率Ref Freq ：80M ，
+	 * 带入公式：115200 = 80000000 /(16*(UBMR + 1)/(UBIR+1))
+	 * 
+	 * 选取一组满足上式的参数：UBMR、UBIR即可
+	 *	
+	 * UART1_UBIR = 71
+	 * UART1_UBMR = 3124  
+	 */
+	 
+    UART1->UFCR = 5 << 7;     /* Uart的时钟clk：80MHz */
+    UART1->UBIR = 71;
+    UART1->UBMR = 3124;
+	UART1->UCR4 |= (1 << 0);
+	UART1->UCR1 |= (1 << 0);  /*使能当前串口*/
 
-    baudrate = cfg->baud_rate;
-    switch (cfg->data_bits)
-    {
-    case DATA_BITS_8:
-        datasize = EIGHTBITS;
-        break;
-    case DATA_BITS_7:
-        datasize = SEVENBITS;
-        break;
-    }
-    if (cfg->stop_bits == STOP_BITS_1) stopbits = STOPBITS_ONE;
-    else if (cfg->stop_bits == STOP_BITS_2) stopbits = STOPBITS_TWO;
-
-    parity = PARITY_NONE;
-    flowcontrol = FLOWCTRL_OFF;
-
-    /* Initialize UART */
-    uart_init(uart->instance, baudrate, parity, stopbits, datasize, flowcontrol);
-
-    rt_hw_interrupt_install(uart->irqno, rt_hw_uart_isr, serial, "uart");
-    rt_hw_interrupt_mask(uart->irqno);
-
-    /* Set the IRQ mode for the Rx FIFO */
-    uart_set_FIFO_mode(uart->instance, RX_FIFO, 1, IRQ_MODE);
+    rt_hw_interrupt_install(58, rt_hw_uart_isr, serial, "uart");
+    rt_hw_interrupt_umask(58);
 
     return RT_EOK;
 }
 
 static rt_err_t uart_control(struct rt_serial_device *serial, int cmd, void *arg)
 {
-    struct hw_uart_device *uart;
-
-    RT_ASSERT(serial != RT_NULL);
-    uart = (struct hw_uart_device *)serial->parent.user_data;
-
-    switch (cmd)
-    {
-    case RT_DEVICE_CTRL_CLR_INT:
-        /* disable rx irq */
-        rt_hw_interrupt_mask(uart->irqno);
-        break;
-
-    case RT_DEVICE_CTRL_SET_INT:
-        /* enable rx irq */
-        rt_hw_interrupt_umask(uart->irqno);
-        break;
-    }
-
     return RT_EOK;
 }
 
 static int uart_putc(struct rt_serial_device *serial, char c)
 {
-    struct hw_uart_device *uart;
-
-    RT_ASSERT(serial != RT_NULL);
-    uart = (struct hw_uart_device *)serial->parent.user_data;
-
-    uart_putchar(uart->instance, (uint8_t*)&c);
+	while (!((UART1->USR2) & (1<<3))); /*等待上个字节发送完毕*/
+	UART1->UTXD = (unsigned char)c;
 
     return 1;
 }
 
 static int uart_getc(struct rt_serial_device *serial)
 {
-    int ch;
-    struct hw_uart_device *uart;
+    int ch = -1;
 
-    RT_ASSERT(serial != RT_NULL);
-    uart = (struct hw_uart_device *)serial->parent.user_data;
-
-    ch = uart_getchar(uart->instance);
-    if (ch == NONE_CHAR) ch = -1;
-
+	if (UART1->USR2 & (1<<0)) /*等待接收数据*/
+	{
+		return (int)UART1->URXD;
+	}
     return ch;
 }
 
@@ -122,30 +101,29 @@ static const struct rt_uart_ops _uart_ops =
     uart_getc,
 };
 
-#ifdef RT_USING_UART0
-/* UART device driver structure */
-static struct hw_uart_device _uart0_device =
+void uart_iomux(void)
 {
-    HW_UART0,
-    IMX_INT_UART0
-};
-static struct rt_serial_device _serial0;
-#endif
-
 #ifdef BSP_USING_UART1
-/* UART1 device driver structure */
-static struct hw_uart_device _uart1_device =
-{
-    HW_UART1,
-    IMX_INT_UART1
-};
-static struct rt_serial_device _serial1;
+	static volatile unsigned int *IOMUXC_SW_MUX_CTL_PAD_UART1_TX_DATA;
+	static volatile unsigned int *IOMUXC_SW_MUX_CTL_PAD_UART1_RX_DATA;
+	static volatile unsigned int *IOMUXC_UART1_RX_DATA_SELECT_INPUT;
+	IOMUXC_SW_MUX_CTL_PAD_UART1_TX_DATA 	= (volatile unsigned int *)(0x20E0084);
+	IOMUXC_SW_MUX_CTL_PAD_UART1_RX_DATA 	= (volatile unsigned int *)(0x20E0088);
+	IOMUXC_UART1_RX_DATA_SELECT_INPUT		= (volatile unsigned int *)(0x20E0624);
+
+	*IOMUXC_SW_MUX_CTL_PAD_UART1_RX_DATA = 0;
+	*IOMUXC_UART1_RX_DATA_SELECT_INPUT = 3;
+	*IOMUXC_SW_MUX_CTL_PAD_UART1_TX_DATA = 0;
 #endif
+}
+
+struct rt_serial_device _uart1;
 
 int rt_hw_uart_init(void)
 {
-    struct hw_uart_device *uart;
     struct serial_configure config;
+
+	uart_iomux();
 
     config.baud_rate = BAUD_RATE_115200;
     config.bit_order = BIT_ORDER_LSB;
@@ -155,26 +133,13 @@ int rt_hw_uart_init(void)
     config.invert    = NRZ_NORMAL;
     config.bufsz     = RT_SERIAL_RB_BUFSZ;
 
-#ifdef RT_USING_UART0
-    uart = &_uart0_device;
-
-    _serial0.ops    = &_uart_ops;
-    _serial0.config = config;
-
-    /* register UART1 device */
-    rt_hw_serial_register(&_serial0, "uart0",
-                          RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX,
-                          uart);
-#endif
-
 #ifdef BSP_USING_UART1
-    uart = &_uart1_device;
-    _serial1.ops = &_uart_ops;
-    _serial1.config = config;
+    _uart1.ops = &_uart_ops;
+    _uart1.config = config;
 
     /* register UART1 device */
-    rt_hw_serial_register(&_serial1, "uart1",
-                          RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX, uart);
+    rt_hw_serial_register(&_uart1, "uart1",
+                          RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX, RT_NULL);
 #endif
 
     return 0;

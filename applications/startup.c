@@ -10,7 +10,6 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-
 #include <board.h>
 
 extern int  rt_application_init(void);
@@ -21,9 +20,6 @@ extern void rt_hw_board_init(void);
  */
 void rtthread_startup(void)
 {
-    // platform_init();
-    // print_version();
-
     /* initialzie hardware interrupt */
     rt_hw_interrupt_init();
 

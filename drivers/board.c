@@ -12,14 +12,6 @@
 #include <rtthread.h>
 
 #include "board.h"
-
-#include <registers/regsarmglobaltimer.h>
-#include <registers/regsepit.h>
-
-#include <imx_uart.h>
-#include <epit.h>
-#include <cortex_a.h>
-
 #include <mmu.h>
 
 struct mem_desc platform_mem_desc[] = {
@@ -29,41 +21,65 @@ struct mem_desc platform_mem_desc[] = {
 
 const rt_uint32_t platform_mem_desc_size = sizeof(platform_mem_desc)/sizeof(platform_mem_desc[0]);
 
+typedef struct {
+    rt_uint32_t CR;                                /**< Control register, offset: 0x0 */
+    rt_uint32_t SR;                                /**< Status register, offset: 0x4 */
+    rt_uint32_t LR;                                /**< Load register, offset: 0x8 */
+    rt_uint32_t CMPR;                              /**< Compare register, offset: 0xC */
+    rt_uint32_t CNR;                               /**< Counter register, offset: 0x10 */
+} EPIT_Type;
+
+EPIT_Type *epit1 = (EPIT_Type *)(0x020D0000);
+
 static void rt_hw_timer_isr(int vector, void *param)
 {
     rt_tick_increase();
-    epit_get_compare_event(HW_EPIT1);
+    epit1->SR |= (1 << 0);
 }
 
 int rt_hw_timer_init(void)
 {
-    uint32_t freq;
+	epit1->CR = 0;
 
-    // Make sure the timer is off.
-    HW_ARMGLOBALTIMER_CONTROL.B.TIMER_ENABLE = 0;
+	/* software reset  
+	 * bit16
+	 */
+	epit1->CR |= (1 << 16);
+	/* wait for software reset self clear*/
+	while((epit1->CR) & (1 << 16))
+		;
+		  			 		  						  					  				 	   		  	  	 	  
+	/*
+	 * EPIT_CR
+	 * bit21 stopen; bit19 waiten; bit18 debugen
+	 * bit17 overwrite enable; bit3 reload
+	 * bit2 compare interrupt enable; bit1 enable mode
+	 */
+	epit1->CR |= (1 << 21) | (1 << 19) | (1 << 3) | (1 << 1);
 
-    HW_ARMGLOBALTIMER_CONTROL.B.FCR0 =1;
+	/*
+	 * EPIT_CR
+	 * bit25-24: 00 off, 01 peripheral clock(ipg clk), 10 high, 11 low
+	 * bit15-4: prescaler value, divide by n+1
+	 */
+	epit1->CR &= ~((0x3 << 24) | (0xFFF << 4));
+	epit1->CR |= (1 << 24);
 
-    HW_ARMGLOBALTIMER_CONTROL.B.FCR1 =0;
+	/* EPIT_CMPR: compare register */
+	epit1->CMPR = 0;
 
-    HW_ARMGLOBALTIMER_CONTROL.B.DBG_ENABLE =0;
+	/* assume use ipc clk which is 66MHz, 1us against to 66 count */
+	#define USEC_TO_COUNT(us) (us * 66 - 1)
+	/* EPIT_LR: load register , assue use ipc clk 66MHz*/
+	epit1->LR = USEC_TO_COUNT(1000);
 
-    // Clear counter.
-    HW_ARMGLOBALTIMER_COUNTER_HI_WR(0);
-    HW_ARMGLOBALTIMER_COUNTER_LO_WR(0);
+	epit1->CR |= (1 << 2);
 
-    // Now turn on the timer.
-    HW_ARMGLOBALTIMER_CONTROL.B.TIMER_ENABLE = 1;
 
-    freq = get_main_clock(IPG_CLK);
+    rt_hw_interrupt_install(88, rt_hw_timer_isr, RT_NULL, "tick");
+    rt_hw_interrupt_umask(88);
 
-    epit_init(HW_EPIT1, CLKSRC_IPG_CLK, freq / 1000000,
-              SET_AND_FORGET, 10000, WAIT_MODE_EN | STOP_MODE_EN);
-
-    epit_counter_enable(HW_EPIT1, 10000, IRQ_MODE);
-
-    rt_hw_interrupt_install(IMX_INT_EPIT1, rt_hw_timer_isr, RT_NULL, "tick");
-    rt_hw_interrupt_umask(IMX_INT_EPIT1);
+	epit1->CR |= (1 << 0);
 
     return 0;
 }
@@ -74,9 +90,9 @@ INIT_BOARD_EXPORT(rt_hw_timer_init);
  */
 void rt_hw_board_init(void)
 {
-    enable_neon_fpu();
-    disable_strict_align_check();
+	extern void enable_neon_fpu(void);
 
+    enable_neon_fpu();
     rt_components_board_init();
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
 }

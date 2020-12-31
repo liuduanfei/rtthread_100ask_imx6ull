@@ -10,21 +10,8 @@
 
 #include <rtthread.h>
 
-#include <sdk_version.h>
-#include <ccm_pll.h>
-
-void show_freq(void)
-{
-    rt_kprintf("CPU: %d MHz\n", get_main_clock(CPU_CLK)/1000000);
-    rt_kprintf("DDR: %d MHz\n", get_main_clock(MMDC_CH0_AXI_CLK)/1000000);
-    rt_kprintf("IPG: %d MHz\n", get_main_clock(IPG_CLK)/1000000);
-}
-
 void init_thread(void* parameter)
 {
-    rt_kprintf("Freescale i.MX6 Platform SDK %s\n", SDK_VERSION_STRING);
-    show_freq();
-
     rt_components_init();
 }
 

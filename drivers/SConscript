@@ -1,10 +1,11 @@
 from building import *
 
 cwd = GetCurrentDir()
-src	= Glob('*.c') + Glob('iomux/*.c')
+src	= Glob('*.c') + Glob('*.S')
 
-CPPPATH = [cwd, cwd + '/iomux']
+CPPPATH = [cwd]
+CPPDEFINES = ['CHIP_MX6UL']
 
-group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)
+group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH, CPPDEFINES = CPPDEFINES)
 
 Return('group')

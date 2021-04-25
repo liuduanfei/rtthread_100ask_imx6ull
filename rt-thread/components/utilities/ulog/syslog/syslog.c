@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2021, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <ulog.h>
 #include <rthw.h>
+#include <stdint.h>
 #include "syslog.h"
 
 #ifdef ULOG_OUTPUT_FLOAT

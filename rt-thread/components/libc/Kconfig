@@ -22,11 +22,15 @@ if RT_USING_LIBC && RT_USING_DFS
 
     if RT_USING_POSIX
     config RT_USING_POSIX_MMAP
-        bool "Enable mmap() api"
+        bool "Enable mmap() API"
         default n
 
     config RT_USING_POSIX_TERMIOS
-        bool "Enable termios feature"
+        bool "Enable termios APIs"
+        default n
+
+    config RT_USING_POSIX_GETLINE
+        bool "Enable getline()/getdelim() APIs"
         default n
 
     config RT_USING_POSIX_AIO
@@ -50,9 +54,9 @@ if RT_USING_LIBC
 endif
 
 if RT_USING_LIBC != y
-        config RT_LIBC_USING_TIME
-        bool "Enable TIME FUNCTIONS WITHOUT COMPILER'S LIBC"
-        default y
+    config RT_LIBC_USING_TIME
+    bool "Enable TIME FUNCTIONS WITHOUT COMPILER'S LIBC"
+    default y
 endif
 
 endmenu

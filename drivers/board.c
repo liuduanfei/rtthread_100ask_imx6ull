@@ -21,15 +21,7 @@ struct mem_desc platform_mem_desc[] = {
 
 const rt_uint32_t platform_mem_desc_size = sizeof(platform_mem_desc)/sizeof(platform_mem_desc[0]);
 
-typedef struct {
-    rt_uint32_t CR;                                /**< Control register, offset: 0x0 */
-    rt_uint32_t SR;                                /**< Status register, offset: 0x4 */
-    rt_uint32_t LR;                                /**< Load register, offset: 0x8 */
-    rt_uint32_t CMPR;                              /**< Compare register, offset: 0xC */
-    rt_uint32_t CNR;                               /**< Counter register, offset: 0x10 */
-} EPIT_Type;
-
-EPIT_Type *epit1 = (EPIT_Type *)(0x020D0000);
+static EPIT_Type *epit1 = (EPIT_Type *)(0x020D0000);
 
 static void rt_hw_timer_isr(int vector, void *param)
 {
@@ -39,8 +31,6 @@ static void rt_hw_timer_isr(int vector, void *param)
 
 int rt_hw_timer_init(void)
 {
-	epit1->CR = 0;
-
 	/* software reset  
 	 * bit16
 	 */
@@ -76,8 +66,8 @@ int rt_hw_timer_init(void)
 	epit1->CR |= (1 << 2);
 
 
-    rt_hw_interrupt_install(88, rt_hw_timer_isr, RT_NULL, "tick");
-    rt_hw_interrupt_umask(88);
+    rt_hw_interrupt_install(EPIT1_IRQn, rt_hw_timer_isr, RT_NULL, "tick");
+    rt_hw_interrupt_umask(EPIT1_IRQn);
 
 	epit1->CR |= (1 << 0);
 
@@ -91,6 +81,9 @@ INIT_BOARD_EXPORT(rt_hw_timer_init);
 void rt_hw_board_init(void)
 {
 	extern void enable_neon_fpu(void);
+	extern void imx6u_clk_init(void);
+
+	imx6u_clk_init();
 
     enable_neon_fpu();
 

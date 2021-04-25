@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2021, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -20,6 +20,8 @@
 #include "libc/libc_dirent.h"
 #include "libc/libc_signal.h"
 #include "libc/libc_fdset.h"
+#include "libc/libc_limits.h"
+#include "libc/libc_stdio.h"
 
 #if defined(__CC_ARM) || defined(__CLANG_ARM) || defined(__IAR_SYSTEMS_ICC__)
 typedef signed long off_t;

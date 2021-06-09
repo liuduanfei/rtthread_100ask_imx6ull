@@ -110,11 +110,12 @@ static int USDHC_CreateDescTable(u8 *data, u32 len)
 		data += dma_len;
 	}
 	g_adma2_tablbe[entries - 1].attribute |= kUSDHC_Adma2DescriptorEndFlag;
-	/*for (i = 0; i < entries; i++) {
-	  rt_kprintf("g_adma2_tablbe[i] address is 0x%x, attribute is 0x%x\r\n", 
-	  g_adma2_tablbe[i].address, g_adma2_tablbe[i].attribute);
-	  }
-	  */
+
+	for (i = 0; i < entries; i++)
+	{
+		rt_kprintf("g_adma2_tablbe[i] address is 0x%x, attribute is 0x%x\r\n", 
+		g_adma2_tablbe[i].address, g_adma2_tablbe[i].attribute);
+	}
 
 	return 0;
 }
@@ -738,6 +739,7 @@ int sd_init(USDHC_Type *base)
 	/* Set to max frequency in non-high speed mode. */
 	g_sd_card.busClock_Hz = USDHC_SetSdClock(base, 198000000U, SD_CLOCK_25MHZ);
 
+#if 0 //liu-2021年5月15日14:43:54
 	/* Set to 4-bit data bus mode. */
 	/* set card to 4 bit width*/
 	err = USDHC_SendCommand(base, CMD55, g_sd_card.relativeAddress << 16);
@@ -753,6 +755,7 @@ int sd_init(USDHC_Type *base)
 	err = USDHC_SendCommand(base, CMD16, FSL_SDMMC_DEFAULT_BLOCK_SIZE);
 	if (err < 0)
 		return err;	
+#endif
 
 	/* select high speed successful, switch clock to 50M */
 	if (SD_SelectBusTiming(base) == 0)

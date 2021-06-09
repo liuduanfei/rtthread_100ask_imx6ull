@@ -1,43 +1,44 @@
+/*
+ * Copyright (c) 2006-2021, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author        Notes
+ * 2021-05-09     liuduanfei    first version
+ */
 
 #ifndef __DRV_SDIO_H__
 #define __DRV_SDIO_H__
 
+/* uSDHCx_BLK_ATT */
+#define BLKCNT_SHIFT                  16
+#define BLKCNT_MASK                   (0xFFFF << BLKCNT_SHIFT)
+#define BLKSIZE_SHIFT                 0
+#define BLKSIZE_MASK                  (0x1FFF << BLKSIZE_SHIFT)
 
 /* uSDHCx_CMD_XFR_TYP */
 #define CMDINX_SHIFT                  24
 #define CMDINX_MASK                   (0x3F << CMDINX_SHIFT)
-
-#define DPSEL                         (0x1 << 21)
-
+#define DPSEL_SHIFT                   21
+#define DPSEL                         (0x1 << DPSEL_SHIFT)
 #define CICEN_SHIFT                   20
 #define CICEN                         (0x1 << CICEN_SHIFT)
-
 #define CCCEN_SHIFT                   19
 #define CCCEN                         (0x1 << CCCEN_SHIFT)
 
 #define RSPTYP_SHIFT                  16
-#define RSPTYP_MASK                   (0x03 << RSPTYP_SHIFT)
-#define RSPTYP_0                      (0x00 << RSPTYP_SHIFT)
-#define RSPTYP_136                    (0x01 << RSPTYP_SHIFT)
-#define RSPTYP_48                     (0x02 << RSPTYP_SHIFT)
-#define RSPTYP_48_CHECK_BUSY          (0x03 << RSPTYP_SHIFT)
+#define RSPTYP_MASK                   (0x3 << RSPTYP_SHIFT)
+#define RSPTYP_NONE                   (0x0 << RSPTYP_SHIFT)
+#define RSPTYP_136                    (0x1 << RSPTYP_SHIFT)
+#define RSPTYP_48                     (0x2 << RSPTYP_SHIFT)
+#define RSPTYP_48_CHECK_BUSY          (0x3 << RSPTYP_SHIFT)
 
-
-
-/* uSDHCx_SYS_CTRL */
-#define INITA_SHIFT                   27
-#define INITA                         (0x01 << INITA_SHIFT)
-
-#define RSTA_SHIFT                    24
-#define RSTA                          (0x01 << RSTA_SHIFT)
-
-#define DTOCV_SHIFT                   16
-#define DTOCV_MASK                    (0xF << DTOCV_SHIFT)
-
-#define SDCLKFS_SHIFT                 8
-#define SDCLKFS_MASK                  (0xFF << DVS_SHIFT)
-#define DVS_SHIFT                     4
-#define DVS_MASK                      (0x07 << DVS_SHIFT)
+/* uSDHCx_PRES_STATE */
+#define SDOFF                         (0x1 << 7)
+#define SDSTB                         (0x1 << 3)
+#define CDIHB                         (0x1 << 1)
+#define CIHB                          (0x1 << 0)
 
 /* uSDHCx_PROT_CTRL */
 #define BURST_LEN_EN_SHIFT            27
@@ -56,16 +57,56 @@
 
 
 #define EMODE_SHIFT                   4
-#define EMODE_MASK                    (0x03 << EMODE_SHIFT)
-#define EMODE_BIG_ENDIAN              (0x00 << EMODE_SHIFT)
-#define EMODE_HALF_WORD_BIG_ENDIAN    (0x01 << EMODE_SHIFT)
-#define EMODE_LITTLE_ENDIAN           (0x02 << EMODE_SHIFT)
+#define EMODE_MASK                    (0x3 << EMODE_SHIFT)
+#define EMODE_BIG_ENDIAN              (0x0 << EMODE_SHIFT)
+#define EMODE_HALF_WORD_BIG_ENDIAN    (0x1 << EMODE_SHIFT)
+#define EMODE_LITTLE_ENDIAN           (0x2 << EMODE_SHIFT)
 
 #define DTW_SHIFT                     1
-#define DTW_MASK                      (0x03 << DTW_SHIFT)
-#define DTW_8                         (0x02 << DTW_SHIFT)
-#define DTW_4                         (0x01 << DTW_SHIFT)
-#define DTW_1                         (0x00 << DTW_SHIFT)
+#define DTW_MASK                      (0x3 << DTW_SHIFT)
+#define DTW_8                         (0x2 << DTW_SHIFT)
+#define DTW_4                         (0x1 << DTW_SHIFT)
+#define DTW_1                         (0x0 << DTW_SHIFT)
+
+/* uSDHCx_SYS_CTRL */
+#define INITA_SHIFT                   27
+#define INITA                         (0x1 << INITA_SHIFT)
+#define RSTD_SHIFT                    26
+#define RSTD                          (0x1 << RSTD_SHIFT)
+#define RSTC_SHIFT                    25
+#define RSTC                          (0x1 << RSTC_SHIFT)
+#define RSTA_SHIFT                    24
+#define RSTA                          (0x1 << RSTA_SHIFT)
+#define DTOCV_SHIFT                   16
+#define DTOCV_MASK                    (0xF << DTOCV_SHIFT)
+#define SDCLKFS_SHIFT                 8
+#define SDCLKFS_MASK                  (0xFF << DVS_SHIFT)
+#define DVS_SHIFT                     4
+#define DVS_MASK                      (0x7 << DVS_SHIFT)
+
+/* uSDHCx_INT_STATUS */
+#define DMAE                          (0x1 << 28)
+#define TNE                           (0x1 << 26)
+#define AC12E                         (0x1 << 24)
+#define DEBE                          (0x1 << 22)
+#define DCE                           (0x1 << 20)
+#define DTOE                          (0x1 << 28)
+#define CIE                           (0x1 << 19)
+#define CEBE                          (0x1 << 18)
+#define CCE                           (0x1 << 17)
+#define CTOE                          (0x1 << 16)
+#define TP                            (0x1 << 14)
+#define RTE                           (0x1 << 12)
+#define CINT                          (0x1 << 8)
+#define CRM                           (0x1 << 7)
+#define CINS                          (0x1 << 6)
+#define BRR                           (0x1 << 5)
+#define BWR                           (0x1 << 4)
+#define DINT                          (0x1 << 3)
+#define DINT                          (0x1 << 3)
+#define BGE                           (0x1 << 2)
+#define TC                            (0x1 << 1)
+#define CC                            (0x1 << 0)
 
 /* uSDHCx_INT_SIGNAL_EN */
 #define DMAEIEN                       (0x1 << 28)
@@ -113,45 +154,13 @@
 #define TCSEN                         (0x1 << 1)
 #define CCSEN                         (0x1 << 0)
 
-/* uSDHCx_INT_STATUS */
-#define DMAE                          (0x1 << 28)
-#define TNE                           (0x1 << 26)
-#define AC12E                         (0x1 << 24)
-#define DEBE                          (0x1 << 22)
-#define DCE                           (0x1 << 20)
-#define DTOE                          (0x1 << 28)
-#define CIE                           (0x1 << 19)
-#define CEBE                          (0x1 << 18)
-#define CCE                           (0x1 << 17)
-#define CTOE                          (0x1 << 16)
-#define TP                            (0x1 << 14)
-#define RTE                           (0x1 << 12)
-#define CINT                          (0x1 << 8)
-#define CRM                           (0x1 << 7)
-#define CINS                          (0x1 << 6)
-#define BRR                           (0x1 << 5)
-#define BWR                           (0x1 << 4)
-#define DINT                          (0x1 << 3)
-#define DINT                          (0x1 << 3)
-#define BGE                           (0x1 << 2)
-#define TC                            (0x1 << 1)
-#define CC                            (0x1 << 0)
+#define CMD_ERRORS  (CIE | CEBE | CCE | CTOE)
+#define DATA_ERRORS (DMAE | DEBE | DCE | DTOE | DTOE)
 
 
-#define SDHC_CMD_ERRORS  (CIE | CEBE | CCE | CTOE)
-#define SDHC_DATA_ERRORS (DMAE | DEBE | DCE | DTOE | DTOE)
-
-
-/* uSDHCx_PRES_STATE */
-#define SDOFF                         (0x1 << 7)
-#define SDSTB                         (0x1 << 3)
-#define CDIHB                         (0x1 << 1)
-#define CIHB                          (0x1 << 0)
-
-#define EXT_DMA_EN                    (0x1 << 0)
-
-/* 0 - write */
+/* uSDHCx_MIX_CTRL */
 #define DTDSEL                        (0x1 << 4)
+#define AC12EN                        (0x1 << 2)
 #define DMAEN                         (0x1 << 0)
 
 /* uSDHCx_WTMK_LVL */
@@ -167,13 +176,8 @@
 #define RD_WML_SHIFT                  0
 #define RD_WML_MASK                   (0xFF << RD_WML_SHIFT)
 
-/* uSDHCx_BLK_ATT */
-
-#define BLKCNT_SHIFT                  16
-#define BLKCNT_MASK                   (0xFFFF << BLKCNT_SHIFT)
-
-#define BLKSIZE_SHIFT                 0
-#define BLKSIZE_MASK                  (0x1FFF << BLKCNT_SHIFT)
+/* uSDHCx_VEND_SPEC */
+#define EXT_DMA_EN                   (0x1 << 0)
 
 
 #endif /* __DRV_SDIO_H__ */

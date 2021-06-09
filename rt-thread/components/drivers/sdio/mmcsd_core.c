@@ -53,15 +53,13 @@ void mmcsd_host_unlock(struct rt_mmcsd_host *host)
 
 void mmcsd_req_complete(struct rt_mmcsd_host *host)
 {
-	rt_err_t ret;
-
-    ret = rt_sem_release(&host->sem_ack);
-
-	rt_kprintf("complete 0x%x\n", ret);
+	rt_sem_release(&host->sem_ack);
 }
 
 void mmcsd_send_request(struct rt_mmcsd_host *host, struct rt_mmcsd_req *req)
 {
+	rt_err_t ret;
+
     do {
         req->cmd->retries--;
         req->cmd->err = 0;
@@ -80,11 +78,9 @@ void mmcsd_send_request(struct rt_mmcsd_host *host, struct rt_mmcsd_req *req)
         }
         host->ops->request(host, req);
 
-		rt_kprintf("after\n");
         rt_sem_take(&host->sem_ack, RT_WAITING_FOREVER);
 
     } while(req->cmd->err && (req->cmd->retries > 0));
-
 
 }
 

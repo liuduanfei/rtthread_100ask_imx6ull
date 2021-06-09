@@ -30,8 +30,8 @@ if PLATFORM == 'gcc':
     OBJDUMP = PREFIX + 'objdump'
     OBJCPY = PREFIX + 'objcopy'
 
-    DEVICE = ' -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -ftree-vectorize -ffast-math -mfloat-abi=softfp'
-    CFLAGS = DEVICE + ' -Wall'
+    DEVICE = ' -march=armv7-a -mtune=cortex-a7 -ftree-vectorize -ffast-math -mfloat-abi=softfp'
+    CFLAGS = DEVICE + ' -Wall -mfpu=vfpv3-d16'
     AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp -D__ASSEMBLY__'
     LINK_SCRIPT = 'imx6ull.lds'
     LFLAGS = DEVICE + ' -Wl,--gc-sections,-Map=rtthread.map,-cref,-u,system_vectors'+\

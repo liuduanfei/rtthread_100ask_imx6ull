@@ -81,11 +81,11 @@ INIT_BOARD_EXPORT(rt_hw_timer_init);
 void rt_hw_board_init(void)
 {
 	extern void enable_neon_fpu(void);
-	extern void imx6u_clk_init(void);
+	extern void imx6ull_clk_init(void);
 
-	imx6u_clk_init();
+	imx6ull_clk_init();
 
-    enable_neon_fpu();
+    //enable_neon_fpu();
 
 	rt_hw_interrupt_init();
 

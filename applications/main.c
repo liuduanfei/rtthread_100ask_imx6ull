@@ -229,15 +229,22 @@ void sd_test(void)
 
 	sd_init(USDHC1);
 	
-	rt_memset(sd_read_buf, 0, sizeof(sd_read_buf));
-	sd_read_blocks(USDHC1, sd_read_buf, 0, 1);
+	rt_memset(sd_read_buf, 0x55, sizeof(sd_read_buf));
+	sd_write_blocks(USDHC1, sd_read_buf, 4, 1);
+	rt_memset(sd_read_buf, 0xAA, sizeof(sd_read_buf));
+	sd_write_blocks(USDHC1, sd_read_buf, 5, 1);
+	rt_memset(sd_read_buf, 0xBB, sizeof(sd_read_buf));
+	sd_write_blocks(USDHC1, sd_read_buf, 6, 3);
 	
-	rt_kprintf("read 1 sectors from 0 sector\r\n");
-	for(i = 0; i < 1024; i++) {
+	rt_memset(sd_read_buf, 0, sizeof(sd_read_buf));
+	sd_read_blocks(USDHC1, sd_read_buf, 4, 5);
+	for(i = 0; i <512*5; i++) {
 		rt_kprintf("%02x ", sd_read_buf[i]);
 		if((i + 1)%16 == 0)
 			rt_kprintf("\r\n");
 	}
+	rt_kprintf("\r\n");
+
 }
 MSH_CMD_EXPORT(sd_test, ...);
 

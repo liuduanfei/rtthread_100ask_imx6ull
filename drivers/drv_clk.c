@@ -18,7 +18,7 @@ void clk_enable(void)
 * @param              : 无
 * @return              : 无
 */
-void imx6u_clk_init(void)
+void imx6ull_clk_init(void)
 {
 	if ((CCM->CCSR & (1 << 2)) == 0 ) /* CPU runs on ARM PLL : bit2 pll1_sw_clk_sel*/
 	{

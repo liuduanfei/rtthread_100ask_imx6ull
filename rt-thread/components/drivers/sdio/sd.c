@@ -144,9 +144,6 @@ static rt_int32_t mmcsd_parse_scr(struct rt_mmcsd_card *card)
     scr->sd_version = GET_BITS(resp, 56, 4);
     scr->sd_bus_widths = GET_BITS(resp, 48, 4);
 
-	LOG_I("SD card version %d", scr->sd_version);
-	LOG_I("SD card bus width %d", scr->sd_bus_widths);
-
     return 0;
 }
 
@@ -228,8 +225,6 @@ static rt_int32_t mmcsd_switch(struct rt_mmcsd_card *card)
     {
         goto err1;
     }
-
-	rt_kprintf(" buf[16] 0x%x\n", buf[16]);
 
     if ((buf[16] & 0xF) != 1)
     {
